@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ZenMoxa 6.0 · 倪师实战智库</title>
+    <style>
+        :root {
+            --zen-green: #1a3c34;
+            --moxa-red: #8e2929;
+            --paper: #f0ede5;
+            --ink: #1a1a1b;
+            --gold: #b89b5e;
+        }
+
+        body {
+            background-color: var(--ink);
+            color: var(--paper);
+            font-family: 'PingFang SC', 'STKaiti', serif;
+            margin: 0; padding: 0;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        /* 顶部时令看板：对接节气逻辑 */
+        header {
+            width: 100%; background: var(--zen-green);
+            padding: 35px 0 25px; text-align: center;
+            border-bottom: 3px solid var(--gold);
+            border-radius: 0 0 40px 40px;
+        }
+        .term-badge { background: var(--gold); color: var(--ink); padding: 4px 15px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; }
+        header h1 { font-size: 1.6rem; margin: 15px 0 5px; letter-spacing: 3px; }
+        .time-flow { font-size: 0.8rem; opacity: 0.7; }
+
+        .container { width: 92%; max-width: 500px; padding-bottom: 120px; }
+
+        /* 核心推荐卡片 */
+        .main-card {
+            background: var(--paper); color: var(--ink);
+            border-radius: 25px; padding: 25px; margin-top: -20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+        }
+        .point-name { font-size: 2.5rem; font-weight: bold; text-align: center; margin: 10px 0; color: var(--moxa-red); }
+        .point-tag { text-align: center; font-size: 0.9rem; color: #666; margin-bottom: 20px; }
+
+        /* 维度 ②：找穴位三步法 */
+        .guide-section { background: #e6e2d6; border-radius: 15px; padding: 20px; margin-bottom: 20px; }
+        .guide-section h4 { margin: 0 0 15px 0; color: var(--zen-green); border-left: 4px solid var(--zen-green); padding-left: 10px; }
+        .step { margin-bottom: 15px; display: flex; gap: 10px; }
+        .step-num { background: var(--zen-green); color: white; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; flex-shrink: 0; }
+        .step-txt { font-size: 0.95rem; line-height: 1.6; }
+
+        /* 维度 ③：反馈与盘古模型接入预留 */
+        .pangu-box {
+            background: rgba(255,255,255,0.05); border: 1px solid var(--gold);
+            border-radius: 20px; padding: 20px; margin-top: 30px;
+        }
+        .pangu-box h4 { color: var(--gold); margin: 0 0 15px 0; display: flex; align-items: center; gap: 8px; }
+        .pangu-box h4::after { content: "Pangu AI 推理中"; font-size: 0.6rem; background: var(--gold); color: #000; padding: 2px 6px; border-radius: 4px; }
+        textarea { width: 100%; height: 100px; background: transparent; border: 1px solid #444; border-radius: 12px; color: white; padding: 12px; box-sizing: border-box; font-size: 1rem; }
+        .btn-solve { background: var(--moxa-red); color: white; border: none; width: 100%; padding: 18px; border-radius: 15px; font-weight: bold; margin-top: 15px; font-size: 1.1rem; box-shadow: 0 5px 15px rgba(142,41,41,0.4); }
+
+        /* 维度 ④：诊断报告 */
+        #report-area { display: none; margin-top: 30px; }
+        .report-card { background: var(--paper); color: var(--ink); border-radius: 20px; padding: 25px; border-top: 10px solid var(--gold); }
+        .report-header { border-bottom: 2px solid #ddd; padding-bottom: 15px; margin-bottom: 15px; text-align: center; }
+        .diagnosis-text { font-size: 0.95rem; line-height: 1.8; text-align: justify; white-space: pre-line; }
+
+        footer { text-align: center; color: #555; padding: 40px 0; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+
+<header>
+    <span class="term-badge" id="term-name">加载节气中...</span>
+    <h1 id="recommend-title">今日核心灸位</h1>
+    <div class="time-flow" id="time-flow">子午流注：推演中...</div>
+</header>
+
+<div class="container">
+    <div class="main-card">
+        <div class="point-name" id="p-name">穴位名</div>
+        <div class="point-tag" id="p-tag">—— 倪海厦：必灸之重穴 ——</div>
+
+        <div class="guide-section">
+            <h4>【精准取穴】三步法</h4>
+            <div id="p-steps"></div>
+        </div>
+
+        <div style="font-size: 0.85rem; color: #666; line-height: 1.6;">
+            <b>倪师实战嘱托：</b><br>
+            <span id="p-ni-voice"></span>
+        </div>
+    </div>
+
+    <div class="pangu-box">
+        <h4>记录艾灸反馈</h4>
+        <textarea id="feedback" placeholder="在此输入：灸感如何？是否有汗、红疹、热传导？或者当下的具体不适症。"></textarea>
+        <button class="btn-solve" onclick="generateReport()">盘古模型 · 生成医案分析</button>
+    </div>
+
+    <div id="report-area">
+        <div class="report-card">
+            <div class="report-header">
+                <div style="font-size: 0.8rem; color: #888;">ZENMOXA AI 诊断报告</div>
+                <h3 style="margin: 5px 0;">辨证推演结果</h3>
+            </div>
+            <div class="diagnosis-text" id="report-text"></div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    持经达变 · 顺天应人
+</footer>
+
+<script>
+    // 维度 ①：节气与倪师医案逻辑库
+    const SOLAR_TERMS = {
+        "Spring": { 
+            name: "春分 (Spring Equinox)", 
+            point: "足三里", 
+            tag: "土生金，补胃气，防春困",
+            steps: [
+                "找参照：坐在椅子上，膝盖髌骨外侧有个凹陷叫‘犊鼻’。",
+                "量分寸：将除大拇指外的四指并拢，横放在犊鼻下，四指底端即是三寸。",
+                "定体感：在胫骨外侧一指宽处，按下去有极酸胀感，倪师云‘按之极酸，便是真穴’。"
+            ],
+            voice: "倪师：‘足三里是胃之合穴，春季木旺克土，灸此位是为了固住后天之本，让胃气充盈。’"
+        },
+        "Summer": { 
+            name: "夏至 (Summer Solstice)", 
+            point: "中脘", 
+            tag: "胃之募穴，化湿消食，理气",
+            steps: [
+                "找参照：先找到肚脐，再找到两肋骨交汇的心窝尖端（鸠尾）。",
+                "量分寸：肚脐与心窝尖连线的中点位置即是中脘。",
+                "定体感：艾灸此处时，热感应向下腹部扩散，代表药气入肠胃。"
+            ],
+            voice: "倪师：‘夏至阳气在外，内里虚冷。灸中脘是直接给胃火加温，去暑湿最快。’"
+        }
+        // ... 此处扩展 24 节气逻辑
+    };
+
+    // 维度 ③ & ④：模拟盘古中医大模型推理逻辑
+    function generateReport() {
+        const text = document.getElementById('feedback').value;
+        const currentPoint = document.getElementById('p-name').innerText;
+        if (!text) return alert("请先落笔输入反馈感受");
+
+        const reportEl = document.getElementById('report-area');
+        const textEl = document.getElementById('report-text');
+
+        // 模拟盘古模型进行 NLP 语义分析和中医辨证
+        let logic = "";
+        if (text.includes("汗")) {
+            logic = `【辨证】表气不固，阳加于阴谓之汗。\n【推演】艾灸${currentPoint}后出汗，是由于艾火真阳之力，将经络中的寒湿通过皮毛宣泄而出。倪师语：‘汗出寒排’，此为大吉之象。\n【建议】灸后半小时禁风寒，可饮少量温姜茶，助阳气回纳。`;
+        } else if (text.includes("痛") || text.includes("烫")) {
+            logic = `【辨证】经络不通，气血瘀滞。\n【推演】灸时感到刺痛或极烫，说明此处经络处于‘堵塞’状态，艾火正在攻冲。倪师语：‘不通则痛’。\n【建议】暂时抬高艾条高度，改用温和灸。若出现水泡，说明体内湿气太重。`;
+        } else if (text.includes("热") && (text.includes("深") || text.includes("走"))) {
+            logic = `【辨证】药气入经，经脉通达。\n【推演】灸感产生位移，出现‘透热’或‘传热’，这是艾灸的最高境界。说明你的元气已接引到艾柱的火力。\n【建议】趁热打铁，增加灸量，务必让热感在体内‘走完’。`;
+        } else {
+            logic = `【辨证】气机尚在感知期。\n【推演】初步记录反馈，目前的灸感尚停留在表层。建议观察下次艾灸后，排便、排尿或睡眠是否有明显改善。\n【计划】持续记录 7 天，形成对比趋势图。`;
+        }
+
+        textEl.innerText = logic;
+        reportEl.style.display = 'block';
+        window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'});
+    }
+
+    // 初始化时辰与节气
+    function init() {
+        // 模拟当前时节逻辑（Version 6.0 修正为节气推演）
+        const data = SOLAR_TERMS["Spring"]; // 默认显示当前
+        document.getElementById('term-name').innerText = data.name;
+        document.getElementById('p-name').innerText = data.point;
+        document.getElementById('p-tag').innerText = data.tag;
+        document.getElementById('p-ni-voice').innerText = data.voice;
+        
+        const stepsContainer = document.getElementById('p-steps');
+        stepsContainer.innerHTML = data.steps.map((s, i) => `
+            <div class="step">
+                <div class="step-num">${i+1}</div>
+                <div class="step-txt">${s}</div>
+            </div>
+        `).join('');
+
+        // 计算子午流注
+        const hour = new Date().getHours();
+        const flow = [
+            "子胆丑肝寅肺头", "卯大胃辰巳脾求", "午心未小申膀胱", "酉肾戌包亥焦游"
+        ];
+        document.getElementById('time-flow').innerText = `当前时辰：${flow[Math.floor(hour/2) % 12] || "修行时"}`;
+    }
+
+    init();
+</script>
+</body>
+</html>

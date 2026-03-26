@@ -3,135 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>倪师艾灸 · 传世实战 12.0</title>
+    <title>倪师艾灸 · 2026 智库版</title>
     <style>
-        :root { --p: #1a3c34; --red: #a22d2d; --gold: #b89b5e; --paper: #f4f1ea; --ink: #1c1c1b; }
-        body { background: var(--ink); color: #ccc; font-family: 'PingFang SC', 'STKaiti', serif; margin: 0; padding: 0; }
-        .container { max-width: 500px; margin: 0 auto; padding-bottom: 100px; }
+        :root { --p: #1a3c34; --red: #a22d2d; --gold: #b89b5e; --bg: #0a0a0a; }
+        body { background: var(--bg); color: #fff; font-family: -apple-system, sans-serif; margin: 0; padding: 0; }
+        .container { max-width: 500px; margin: 0 auto; padding-bottom: 50px; }
 
-        /* 顶部子午流注看板 */
-        .clock-header { background: linear-gradient(135deg, #1a3c34, #0d1f1b); padding: 30px 20px; border-bottom: 3px solid var(--gold); border-radius: 0 0 35px 35px; text-align: center; }
-        .time-now { color: var(--gold); font-size: 1.8rem; font-weight: bold; margin: 5px 0; }
-        .date-tag { font-size: 0.8rem; opacity: 0.6; letter-spacing: 2px; }
+        /* 顶部时钟 - 全动态 */
+        header { background: #111; padding: 30px 20px; border-bottom: 2px solid var(--gold); text-align: center; }
+        #dyn-year { font-size: 1.2rem; color: var(--gold); letter-spacing: 2px; }
+        #dyn-clock { font-size: 3rem; font-weight: bold; margin: 10px 0; font-family: monospace; }
+        .shichen-tag { background: var(--p); padding: 6px 20px; border-radius: 20px; font-size: 0.95rem; display: inline-block; }
 
-        /* 核心卡片 - 宣纸质感 */
-        .card { background: var(--paper); color: #1a1a1a; margin: -20px 15px 20px; border-radius: 25px; padding: 25px; box-shadow: 0 15px 50px rgba(0,0,0,0.6); position: relative; }
-        .point-name { font-size: 3rem; font-weight: bold; text-align: center; color: var(--red); margin: 5px 0; }
+        /* 实战卡片 */
+        .card { background: #fdfaf2; color: #1a1a1a; margin: 20px 15px; border-radius: 12px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .p-name { font-size: 3.2rem; font-weight: bold; color: var(--red); text-align: center; margin: 0; }
+        .p-meta { text-align: center; color: #666; font-size: 0.9rem; margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 10px; }
         
-        /* 取穴图谱 - 强化解剖引导 */
-        .visual-box { width: 100%; aspect-ratio: 4/3; background: #e0ddd0; border-radius: 15px; margin: 15px 0; border: 1px solid #ccc; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
-        .visual-box svg { width: 90%; height: auto; }
+        .guide-step { background: rgba(0,0,0,0.03); padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 5px solid var(--p); line-height: 1.7; }
+        .guide-step b { color: var(--p); display: block; margin-bottom: 5px; font-size: 1.1rem; }
 
-        .ni-voice { background: rgba(162,45,45,0.05); padding: 15px; border-radius: 12px; border-left: 5px solid var(--red); font-size: 0.95rem; line-height: 1.6; margin-bottom: 15px; }
+        /* 计时器 */
+        .timer-wrap { background: #1a1a1a; margin: 0 15px; padding: 25px; border-radius: 15px; text-align: center; border: 1px solid #333; }
+        #timer-display { font-size: 2.5rem; color: var(--gold); font-family: monospace; margin-bottom: 15px; }
+        .timer-btn { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 10px 25px; border-radius: 5px; cursor: pointer; margin: 0 5px; }
+        .timer-btn:active { background: var(--gold); color: #000; }
 
-        /* 禁忌雷达 */
-        .radar { background: #fff1f0; border: 1px solid #ffa39e; color: #cf1322; padding: 15px; border-radius: 15px; margin: 0 15px 25px; font-size: 0.85rem; line-height: 1.5; }
-
-        /* 交互反馈 */
-        .input-group { padding: 0 15px; }
-        textarea { width: 100%; height: 90px; background: #111; border: 1px solid var(--gold); border-radius: 15px; color: #fff; padding: 15px; box-sizing: border-box; font-family: inherit; font-size: 1rem; }
-        .btn { background: var(--red); color: #fff; border: none; width: 100%; padding: 18px; border-radius: 15px; font-weight: bold; font-size: 1.1rem; margin-top: 15px; cursor: pointer; }
-
-        .history-item { background: #1a1a1a; padding: 15px; border-radius: 12px; margin-bottom: 10px; border-left: 4px solid var(--gold); font-size: 0.85rem; }
+        /* 笔记区 */
+        .note-area { padding: 25px 15px; }
+        textarea { width: 100%; height: 100px; background: #111; border: 1px solid #444; border-radius: 10px; color: #fff; padding: 15px; box-sizing: border-box; font-size: 1rem; }
+        .save-btn { background: var(--red); color: #fff; border: none; width: 100%; padding: 18px; border-radius: 10px; font-weight: bold; font-size: 1.1rem; margin-top: 15px; }
+        
+        .log-item { background: #111; padding: 15px; border-radius: 10px; margin-top: 10px; border: 1px solid #222; font-size: 0.85rem; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <header class="clock-header">
-        <div id="jieqi" class="date-tag">2024年 · 仲春</div>
-        <div id="shichen" class="time-now">加载中...</div>
-        <div id="meridian" style="font-size: 0.9rem; color: #fff;">--经值班 · 艾灸正当时</div>
+    <header>
+        <div id="dyn-year">正在对齐星辰时间...</div>
+        <div id="dyn-clock">00:00:00</div>
+        <div class="shichen-tag" id="shichen-text">加载时辰中...</div>
     </header>
 
     <div class="card">
-        <div style="text-align:center; font-size:0.8rem; color:#666;">今日倪师推荐重穴：</div>
-        <div class="point-name" id="p-name">--</div>
+        <p style="margin:0; font-size: 0.8rem; color: #999; text-align: center;">倪海厦实战推荐：</p>
+        <div class="p-name" id="p-name">--</div>
+        <div class="p-meta" id="p-meridian">-- 经值班</div>
 
-        <div class="visual-box" id="visual-target">
-            <!-- 动态生成带有解剖参照的 SVG -->
+        <div class="guide-step">
+            <b>第一步：定坐标</b>
+            <span id="step-1">--</span>
+        </div>
+        <div class="guide-step">
+            <b>第二步：量尺寸</b>
+            <span id="step-2">--</span>
+        </div>
+        <div class="guide-step">
+            <b>第三步：找体感</b>
+            <span id="step-3">--</span>
         </div>
 
-        <div class="ni-voice">
-            <b>倪师点穴法：</b><br>
-            <span id="p-guide">--</span>
-        </div>
-
-        <div style="font-size: 0.85rem; color: #555;">
-            <b>【隔物灸建议】</b>：<span id="p-addon">--</span>
+        <div style="font-size: 0.85rem; color: #444; line-height: 1.6;">
+            <span style="color:var(--red); font-weight: bold;">倪师嘱托：</span>
+            <span id="p-ni">--</span>
         </div>
     </div>
 
-    <div class="radar">
-        <b>今日避风雷达：</b>艾灸后毛孔开张，务必封关（遮盖）2小时。严禁洗凉水澡，严禁冷饮。
+    <div class="timer-wrap">
+        <div style="font-size: 0.8rem; color: #666; margin-bottom: 10px;">建议艾灸时长</div>
+        <div id="timer-display">15:00</div>
+        <div class="timer-btns">
+            <button class="timer-btn" onclick="startTimer()">开始计时</button>
+            <button class="timer-btn" onclick="resetTimer()">重置</button>
+        </div>
     </div>
 
-    <div class="input-group">
-        <textarea id="userInput" placeholder="倪师问：灸后体感如何？有无热传导、出汗或皮肤异样？"></textarea>
-        <button class="btn" onclick="diagnose()">获取盘古大模型辨证报告</button>
+    <div class="note-area">
+        <h4 style="color:var(--gold); margin-top: 0;">记录今日艾灸反馈 (盘古辨证)</h4>
+        <textarea id="feedback" placeholder="灸后感受：哪里热？是否有汗、红疹、热传导？"></textarea>
+        <button class="save-btn" onclick="saveRecord()">生成倪师风格辨证医案</button>
+        <div id="history"></div>
     </div>
-
-    <div id="logs" style="padding:20px 15px;"></div>
 </div>
 
 <script>
-    // 维度 1：全量 12 时辰数据库 (严格对齐 24 小时)
-    const MOXA_DB = [
-        { h: [23, 0], s: "子", m: "胆经", p: "足临泣", g: "脚背外侧，第四、五趾骨间。按之极酸。", addon: "建议直灸，引胆气下行。", svg: '<path d="M30 20 L50 80 L70 20" stroke="#999" fill="none"/><circle cx="65" cy="70" r="6" fill="red"/>' },
-        { h: [1, 2], s: "丑", m: "肝经", p: "太冲", g: "足背第一、二跖骨间。倪师云：‘这是消气穴’。", addon: "隔姜灸，助肝排毒。", svg: '<path d="M40 20 L50 80 L60 20" stroke="#999" fill="none"/><circle cx="50" cy="75" r="6" fill="red"/>' },
-        { h: [3, 4], s: "寅", m: "肺经", p: "列缺", g: "两手虎口交叉，食指尖落下的凹陷处。", addon: "温和灸，调理肺气。", svg: '<path d="M20 50 L80 50" stroke="#999" stroke-width="2"/><circle cx="40" cy="50" r="6" fill="red"/>' },
-        { h: [5, 6], s: "卯", m: "大肠经", p: "曲池", g: "屈肘，横纹头。按之有跳动感。", addon: "直灸，清热排毒。", svg: '<path d="M20 80 L50 50 L80 80" stroke="#999" fill="none"/><circle cx="50" cy="50" r="6" fill="red"/>' },
-        { h: [7, 8], s: "辰", m: "胃经", p: "足三里", g: "膝下三寸，胫骨外一横指。按之极酸。", addon: "隔姜灸，补后天之本。", svg: '<rect x="45" y="10" width="10" height="80" fill="#bbb"/><circle cx="60" cy="65" r="6" fill="red"/>' },
-        { h: [9, 10], s: "巳", m: "脾经", p: "三阴交", g: "内踝尖直上三寸（四指宽），胫骨后缘处。", addon: "隔姜灸，调理妇科与脾湿。", svg: '<path d="M50 10 L50 90" stroke="#999" stroke-width="4"/><circle cx="55" cy="70" r="6" fill="red"/><text x="10" y="72" font-size="6">内踝骨</text>' },
-        { h: [11, 12], s: "午", m: "心经", p: "关元", g: "肚脐直下三寸。倪师云：‘此为心火下行之门’。", addon: "重灸，续命之火。", svg: '<circle cx="50" cy="30" r="5" fill="none" stroke="#999"/><circle cx="50" cy="70" r="8" fill="red"/><text x="55" y="32" font-size="6">肚脐</text>' },
-        { h: [13, 14], s: "未", m: "小肠经", p: "阳谷", g: "手腕外侧，尺骨茎突与三角骨间凹陷。", addon: "温和灸，理气清热。", svg: '<path d="M20 50 L80 50" stroke="#999"/><circle cx="70" cy="50" r="6" fill="red"/>' },
-        { h: [15, 16], s: "申", m: "膀胱经", p: "昆仑", g: "外踝尖与跟腱连线中点。倪师：‘此乃治腰圣穴’。", addon: "直灸，引火下行。", svg: '<path d="M50 10 L50 90" stroke="#999"/><circle cx="55" cy="80" r="6" fill="red"/>' },
-        { h: [17, 18], s: "酉", m: "肾经", p: "太溪", g: "内踝尖与跟腱连线中点凹陷处。", addon: "隔姜灸，滋阴补肾。", svg: '<path d="M50 10 L50 90" stroke="#999"/><circle cx="45" cy="80" r="6" fill="red"/>' },
-        { h: [19, 20], s: "戌", m: "心包经", p: "内关", g: "腕横纹上二寸（三指宽），两筋间。", addon: "温和灸，宁心安神。", svg: '<path d="M40 10 L40 90 M60 10 L60 90" stroke="#999"/><circle cx="50" cy="60" r="6" fill="red"/>' },
-        { h: [21, 22], s: "亥", m: "三焦经", p: "阳池", g: "腕背横纹中，指伸肌腱尺侧凹陷中。", addon: "直灸，通达全身气机。", svg: '<rect x="30" y="70" width="40" height="10" fill="#999"/><circle cx="50" cy="70" r="6" fill="red"/>' }
+    // 维度 ①：24小时全量时辰矩阵（修复 10:01 漂移问题）
+    const SCHEDULE = [
+        { h: [23, 0], s: "子", m: "胆经", p: "足临泣", n:["脚背外侧，第四/五趾骨间。","沿趾缝上推至两骨结合凹陷处。","按之极酸即是真穴。"], ni:"子时胆经最旺。倪师：‘子时应眠，灸此旨在引火下行’。" },
+        { h: [1, 2], s: "丑", m: "肝经", p: "太冲", n:["脚背大脚趾与二脚趾间。","向上量约两横指宽，跖骨交汇凹陷处。","倪师：‘这是消气穴’，按之极痛。"], ni:"丑时肝经排毒。灸太冲疏肝理气，去肝毒最快。" },
+        { h: [3, 4], s: "寅", m: "肺经", p: "列缺", n:["两手虎口自然交叉。","食指尖落下的手腕骨侧凹陷处。","摸到一个小缺口的感觉即是。"], ni:"寅时肺经当令。哮喘、咳嗽者，灸此穴宣肺平喘。" },
+        { h: [5, 6], s: "卯", m: "大肠经", p: "曲池", n:["手肘弯曲成直角。","肘横纹外侧尽头的凹陷。","倪师：‘按之极酸处’，能清热解毒。"], ni:"卯时大肠经值班。灸曲池清热排毒，对皮肤瘙痒极佳。" },
+        { h: [7, 8], s: "辰", m: "胃经", p: "足三里", n:["膝盖髌骨外侧凹陷（犊鼻）下。","四指并拢量三寸。","胫骨外一横指，按之有跳动感。"], ni:"辰时胃气最旺。灸三里如吃老母鸡，春季补中益气必灸。" },
+        { h: [9, 10], s: "巳", m: "脾经", p: "三阴交", n:["内踝尖直上四指宽。","胫骨后缘靠近骨头处。","按之极酸。"], ni:"巳时脾经当值。此为调经、化湿、消肿圣穴。" },
+        { h: [11, 12], s: "午", m: "心经", p: "关元", n:["肚脐眼正中心为起点。","正下方四指宽三量（三寸）。","人体正中线上。"], ni:"午时心经当令。灸关元引心火入小肠，温养丹田，续命之火。" },
+        { h: [13, 14], s: "未", m: "小肠经", p: "阳谷", n:["手腕外侧（小指侧）。","尺骨茎突与三角骨间凹陷。","左右摆动手指能摸到骨缝。"], ni:"未时小肠分清泌浊。灸阳谷理气清热，调理吸收。" },
+        { h: [15, 16], s: "申", m: "膀胱经", p: "昆仑", n:["外踝尖与后方大筋连线中点。","按压有明显的深层酸痛感。","摸到凹陷处。"], ni:"申时膀胱经运行。倪师：‘这是治腰痛的特效药’。" },
+        { h: [17, 18], s: "酉", m: "肾经", p: "太溪", n:["内踝尖与后方大筋连线中点。","按压有明显的搏动感。","此处为肾经原穴。"], ni:"酉时肾经当令。灸太溪滋阴补肾，引火归元。" },
+        { h: [19, 20], s: "戌", m: "心包经", p: "内关", n:["腕横纹上二寸（三指宽）。","手臂中间两条大筋缝隙中。","按压会感觉到手掌发麻。"], ni:"戌时调理心包。灸内关宁心安神，改善睡眠。" },
+        { h: [21, 22], s: "亥", m: "三焦经", p: "阳池", n:["手腕背面横纹中点。","指总伸肌腱尺侧凹陷中。","按之有一道深沟。"], ni:"亥时通达三焦。灸阳池调理全身气机，通经活络。" }
     ];
 
-    function update() {
+    function runEngine() {
         const now = new Date();
         const h = now.getHours();
         
-        // 核心修正：12 时辰精准算法
-        const cur = MOXA_DB.find(x => h >= x.h[0] && h <= x.h[1]) || MOXA_DB[0];
-        if(h === 0) cur = MOXA_DB[0]; // 子时特殊处理
+        // 1. 动态对齐年月日（彻底废除 2024）
+        document.getElementById('dyn-year').innerText = `${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日`;
+        document.getElementById('dyn-clock').innerText = now.toLocaleTimeString('zh-CN', { hour12: false });
 
-        document.getElementById('shichen').innerText = `${cur.s}时 (${cur.h[0]}:00-${cur.h[1]}:59)`;
-        document.getElementById('meridian').innerText = `${cur.m}当令 · 艾灸正当时`;
-        document.getElementById('p-name').innerText = cur.p;
-        document.getElementById('p-guide').innerText = cur.g;
-        document.getElementById('p-addon').innerText = cur.addon;
+        // 2. 动态季节逻辑
+        const seasons = ["冬藏", "冬藏", "春生", "春生", "春生", "夏长", "夏长", "夏长", "秋收", "秋收", "秋收", "冬藏"];
+        document.getElementById('dyn-year').innerText += ` · 时令：${seasons[now.getMonth()]}`;
 
-        // 渲染带有骨骼标记的 SVG
-        document.getElementById('visual-target').innerHTML = `
-            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <rect width="100" height="100" fill="none"/>
-                <text x="5" y="15" font-size="5" fill="#888">解剖方位参考</text>
-                ${cur.svg}
-            </svg>`;
-    }
-
-    function diagnose() {
-        const input = document.getElementById('userInput').value;
-        if(!input) return alert("请先落笔记录体感");
+        // 3. 动态精准时辰（修复 10:01 属于 [9,10] 巳时）
+        const cur = SCHEDULE.find(x => h === x.h[0] || h === x.h[1]) || SCHEDULE[0];
         
-        let report = "";
-        if(input.includes("走") || input.includes("热")) report = "【辨证】药气入经，引火归元。说明真阳已透达经络，大吉。";
-        else if(input.includes("汗")) report = "【辨证】阳加于阴，寒湿外宣。倪师语：‘汗出寒排，是为生机’。";
-        else report = "【提示】气机感传中。请对比昨日，是否有更深的温热渗透感。";
-
-        const log = document.createElement('div');
-        log.className = 'history-item';
-        log.innerHTML = `<small>${new Date().toLocaleTimeString()}</small><br>${input}<br><b style="color:var(--gold)">${report}</b>`;
-        document.getElementById('logs').prepend(log);
-        document.getElementById('userInput').value = "";
+        document.getElementById('shichen-text').innerText = `${cur.s}时 (${cur.h[0]}:00-${cur.h[1]}:59)`;
+        document.getElementById('p-name').innerText = cur.p;
+        document.getElementById('p-meridian').innerText = `${cur.m}当令 · 推荐灸之`;
+        document.getElementById('step-1').innerText = cur.n[0];
+        document.getElementById('step-2').innerText = cur.n[1];
+        document.getElementById('step-3').innerText = cur.n[2];
+        document.getElementById('p-ni').innerText = cur.ni;
     }
 
-    setInterval(update, 1000);
-    update();
+    // 艾灸计时器逻辑
+    let tInt; let tLeft = 15 * 60;
+    function startTimer() {
+        clearInterval(tInt);
+        tInt = setInterval(() => {
+            if(tLeft <= 0) { clearInterval(tInt); alert("艾灸时间到，请务必避风封关！"); return; }
+            tLeft--;
+            const m = Math.floor(tLeft/60); const s = tLeft%60;
+            document.getElementById('timer-display').innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+        }, 1000);
+    }
+    function resetTimer() { clearInterval(tInt); tLeft = 15 * 60; document.getElementById('timer-display').innerText = "15:00"; }
+
+    function saveRecord() {
+        const val = document.getElementById('feedback').value;
+        if(!val) return;
+        let res = val.includes("走") || val.includes("热") ? "【辨证】药气入经，真火引动元气。大吉。" : "【提示】气机感传中，观察明日是否排便通畅。";
+        const log = document.createElement('div');
+        log.className = 'log-item';
+        log.innerHTML = `<small style="color:#666">${new Date().toLocaleString()}</small><br>${val}<br><b style="color:var(--gold)">${res}</b>`;
+        document.getElementById('history').prepend(log);
+        document.getElementById('feedback').value = "";
+    }
+
+    // 每一秒执行一次动态对齐
+    setInterval(runEngine, 1000);
+    runEngine();
 </script>
 </body>
 </html>

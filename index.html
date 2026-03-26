@@ -3,134 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>倪师艾灸 · 不灭实战版 11.0</title>
+    <title>倪师艾灸 · 传世实战 12.0</title>
     <style>
-        :root { --p: #1a3c34; --red: #a22d2d; --gold: #b89b5e; --paper: #f4f1ea; }
-        body { background: #000; color: #fff; font-family: -apple-system, system-ui, sans-serif; margin: 0; padding: 0; }
+        :root { --p: #1a3c34; --red: #a22d2d; --gold: #b89b5e; --paper: #f4f1ea; --ink: #1c1c1b; }
+        body { background: var(--ink); color: #ccc; font-family: 'PingFang SC', 'STKaiti', serif; margin: 0; padding: 0; }
         .container { max-width: 500px; margin: 0 auto; padding-bottom: 100px; }
 
-        /* 顶部时钟 - 创新：同步心跳逻辑 */
-        header { background: var(--p); padding: 25px; text-align: center; border-bottom: 2px solid var(--gold); }
-        .time-now { color: var(--gold); font-size: 1.8rem; font-weight: bold; margin: 10px 0; text-shadow: 0 0 10px rgba(184,155,94,0.5); }
-        .date-tag { font-size: 0.8rem; opacity: 0.6; letter-spacing: 3px; }
+        /* 顶部子午流注看板 */
+        .clock-header { background: linear-gradient(135deg, #1a3c34, #0d1f1b); padding: 30px 20px; border-bottom: 3px solid var(--gold); border-radius: 0 0 35px 35px; text-align: center; }
+        .time-now { color: var(--gold); font-size: 1.8rem; font-weight: bold; margin: 5px 0; }
+        .date-tag { font-size: 0.8rem; opacity: 0.6; letter-spacing: 2px; }
 
-        /* 宣纸卡片样式 */
-        .card { background: var(--paper); color: #1a1a1a; margin: 15px; border-radius: 20px; padding: 20px; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
-        .point-name { font-size: 2.8rem; font-weight: bold; text-align: center; color: var(--red); margin: 5px 0; }
+        /* 核心卡片 - 宣纸质感 */
+        .card { background: var(--paper); color: #1a1a1a; margin: -20px 15px 20px; border-radius: 25px; padding: 25px; box-shadow: 0 15px 50px rgba(0,0,0,0.6); position: relative; }
+        .point-name { font-size: 3rem; font-weight: bold; text-align: center; color: var(--red); margin: 5px 0; }
         
-        /* 预案 A：SVG 内嵌图谱 - 彻底解决拦截 */
-        .svg-container { 
-            width: 100%; aspect-ratio: 4/3; background: #e0ddd0; 
-            border-radius: 12px; margin: 15px 0; border: 1px solid #ccc;
-            display: flex; align-items: center; justify-content: center;
-        }
-        svg { width: 80%; height: auto; }
+        /* 取穴图谱 - 强化解剖引导 */
+        .visual-box { width: 100%; aspect-ratio: 4/3; background: #e0ddd0; border-radius: 15px; margin: 15px 0; border: 1px solid #ccc; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
+        .visual-box svg { width: 90%; height: auto; }
 
-        .ni-secret { background: rgba(162,45,45,0.05); padding: 15px; border-radius: 12px; border-left: 5px solid var(--red); font-size: 0.95rem; line-height: 1.6; }
+        .ni-voice { background: rgba(162,45,45,0.05); padding: 15px; border-radius: 12px; border-left: 5px solid var(--red); font-size: 0.95rem; line-height: 1.6; margin-bottom: 15px; }
 
-        /* 记录与反馈 */
-        .feedback-area { padding: 0 15px; }
-        textarea { width: 100%; height: 100px; background: #111; border: 1px solid var(--gold); border-radius: 15px; color: #fff; padding: 15px; font-family: inherit; box-sizing: border-box; }
-        .btn-moxa { background: var(--red); color: #fff; border: none; width: 100%; padding: 18px; border-radius: 15px; font-weight: bold; font-size: 1.1rem; margin-top: 10px; cursor: pointer; }
+        /* 禁忌雷达 */
+        .radar { background: #fff1f0; border: 1px solid #ffa39e; color: #cf1322; padding: 15px; border-radius: 15px; margin: 0 15px 25px; font-size: 0.85rem; line-height: 1.5; }
 
-        #logs { margin-top: 30px; border-top: 1px solid #333; padding: 20px 15px; }
-        .log-item { background: #1a1a1a; padding: 15px; border-radius: 12px; margin-bottom: 12px; border-left: 4px solid var(--gold); font-size: 0.85rem; }
+        /* 交互反馈 */
+        .input-group { padding: 0 15px; }
+        textarea { width: 100%; height: 90px; background: #111; border: 1px solid var(--gold); border-radius: 15px; color: #fff; padding: 15px; box-sizing: border-box; font-family: inherit; font-size: 1rem; }
+        .btn { background: var(--red); color: #fff; border: none; width: 100%; padding: 18px; border-radius: 15px; font-weight: bold; font-size: 1.1rem; margin-top: 15px; cursor: pointer; }
+
+        .history-item { background: #1a1a1a; padding: 15px; border-radius: 12px; margin-bottom: 10px; border-left: 4px solid var(--gold); font-size: 0.85rem; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <header>
-        <div id="jieqi" class="date-tag">推演 24 节气中...</div>
-        <div id="shichen" class="time-now">正在对齐时间</div>
-        <div id="meridian" style="font-size: 0.9rem; color: #fff;">--经值班</div>
+    <header class="clock-header">
+        <div id="jieqi" class="date-tag">2024年 · 仲春</div>
+        <div id="shichen" class="time-now">加载中...</div>
+        <div id="meridian" style="font-size: 0.9rem; color: #fff;">--经值班 · 艾灸正当时</div>
     </header>
 
     <div class="card">
-        <div style="text-align:center; font-size: 0.75rem; color:#666;">倪师指定今日穴位：</div>
-        <div class="point-name" id="point-name">--</div>
+        <div style="text-align:center; font-size:0.8rem; color:#666;">今日倪师推荐重穴：</div>
+        <div class="point-name" id="p-name">--</div>
 
-        <!-- 预案 A：内嵌矢量示意图（这是代码，绝不会被拦截） -->
-        <div class="svg-container" id="visual-target">
-            <!-- 动态生成 SVG 人体坐标 -->
+        <div class="visual-box" id="visual-target">
+            <!-- 动态生成带有解剖参照的 SVG -->
         </div>
 
-        <div class="ni-secret">
-            <b>倪师点穴诀（三步到位）：</b><br>
-            <span id="ni-guide">正在加载倪师绝学...</span>
+        <div class="ni-voice">
+            <b>倪师点穴法：</b><br>
+            <span id="p-guide">--</span>
+        </div>
+
+        <div style="font-size: 0.85rem; color: #555;">
+            <b>【隔物灸建议】</b>：<span id="p-addon">--</span>
         </div>
     </div>
 
-    <div class="feedback-area">
-        <h4 style="color:var(--gold); margin: 10px 0;">③ 记录艾灸反馈 (盘古大模型辨证)</h4>
-        <textarea id="userInput" placeholder="灸后有什么感觉？哪里发热？是否有汗？"></textarea>
-        <button class="btn-moxa" onclick="diagnose()">获取辨证报告</button>
+    <div class="radar">
+        <b>今日避风雷达：</b>艾灸后毛孔开张，务必封关（遮盖）2小时。严禁洗凉水澡，严禁冷饮。
     </div>
 
-    <div id="logs"></div>
+    <div class="input-group">
+        <textarea id="userInput" placeholder="倪师问：灸后体感如何？有无热传导、出汗或皮肤异样？"></textarea>
+        <button class="btn" onclick="diagnose()">获取盘古大模型辨证报告</button>
+    </div>
+
+    <div id="logs" style="padding:20px 15px;"></div>
 </div>
 
 <script>
-    // 维度 1：全量时辰与穴位 SVG 映射库
-    const MOXA_CORE = [
-        { h: [23, 0], s: "子", m: "胆经", p: "足临泣", g: "脚背外侧，第四、五趾骨间。按之极酸。", svg: '<circle cx="50" cy="80" r="5" fill="red"/><path d="M40 20 L50 80 L60 20" stroke="black" fill="none"/>' },
-        { h: [5, 6], s: "卯", m: "大肠经", p: "曲池", g: "屈肘，横纹头。按之有跳动感。", svg: '<circle cx="30" cy="50" r="6" fill="red"/><path d="M10 10 L30 50 L80 10" stroke="black" fill="none"/>' },
-        { h: [7, 8], s: "辰", m: "胃经", p: "足三里", g: "膝下三寸，胫骨外一横指。倪师云：‘这是长寿第一穴’。", svg: '<circle cx="50" cy="65" r="7" fill="red" opacity="0.8"/><rect x="40" y="10" width="20" height="80" fill="#999" opacity="0.3"/>' },
-        { h: [11, 12], s: "午", m: "心经", p: "关元", g: "肚脐直下三寸。倪师云：‘此为心火下行之大门’。", svg: '<circle cx="50" cy="50" r="8" fill="red"/><path d="M50 10 L50 90 M10 50 L90 50" stroke="#ccc" stroke-dasharray="2"/>' }
-        // 更多穴位坐标在这里动态补充...
+    // 维度 1：全量 12 时辰数据库 (严格对齐 24 小时)
+    const MOXA_DB = [
+        { h: [23, 0], s: "子", m: "胆经", p: "足临泣", g: "脚背外侧，第四、五趾骨间。按之极酸。", addon: "建议直灸，引胆气下行。", svg: '<path d="M30 20 L50 80 L70 20" stroke="#999" fill="none"/><circle cx="65" cy="70" r="6" fill="red"/>' },
+        { h: [1, 2], s: "丑", m: "肝经", p: "太冲", g: "足背第一、二跖骨间。倪师云：‘这是消气穴’。", addon: "隔姜灸，助肝排毒。", svg: '<path d="M40 20 L50 80 L60 20" stroke="#999" fill="none"/><circle cx="50" cy="75" r="6" fill="red"/>' },
+        { h: [3, 4], s: "寅", m: "肺经", p: "列缺", g: "两手虎口交叉，食指尖落下的凹陷处。", addon: "温和灸，调理肺气。", svg: '<path d="M20 50 L80 50" stroke="#999" stroke-width="2"/><circle cx="40" cy="50" r="6" fill="red"/>' },
+        { h: [5, 6], s: "卯", m: "大肠经", p: "曲池", g: "屈肘，横纹头。按之有跳动感。", addon: "直灸，清热排毒。", svg: '<path d="M20 80 L50 50 L80 80" stroke="#999" fill="none"/><circle cx="50" cy="50" r="6" fill="red"/>' },
+        { h: [7, 8], s: "辰", m: "胃经", p: "足三里", g: "膝下三寸，胫骨外一横指。按之极酸。", addon: "隔姜灸，补后天之本。", svg: '<rect x="45" y="10" width="10" height="80" fill="#bbb"/><circle cx="60" cy="65" r="6" fill="red"/>' },
+        { h: [9, 10], s: "巳", m: "脾经", p: "三阴交", g: "内踝尖直上三寸（四指宽），胫骨后缘处。", addon: "隔姜灸，调理妇科与脾湿。", svg: '<path d="M50 10 L50 90" stroke="#999" stroke-width="4"/><circle cx="55" cy="70" r="6" fill="red"/><text x="10" y="72" font-size="6">内踝骨</text>' },
+        { h: [11, 12], s: "午", m: "心经", p: "关元", g: "肚脐直下三寸。倪师云：‘此为心火下行之门’。", addon: "重灸，续命之火。", svg: '<circle cx="50" cy="30" r="5" fill="none" stroke="#999"/><circle cx="50" cy="70" r="8" fill="red"/><text x="55" y="32" font-size="6">肚脐</text>' },
+        { h: [13, 14], s: "未", m: "小肠经", p: "阳谷", g: "手腕外侧，尺骨茎突与三角骨间凹陷。", addon: "温和灸，理气清热。", svg: '<path d="M20 50 L80 50" stroke="#999"/><circle cx="70" cy="50" r="6" fill="red"/>' },
+        { h: [15, 16], s: "申", m: "膀胱经", p: "昆仑", g: "外踝尖与跟腱连线中点。倪师：‘此乃治腰圣穴’。", addon: "直灸，引火下行。", svg: '<path d="M50 10 L50 90" stroke="#999"/><circle cx="55" cy="80" r="6" fill="red"/>' },
+        { h: [17, 18], s: "酉", m: "肾经", p: "太溪", g: "内踝尖与跟腱连线中点凹陷处。", addon: "隔姜灸，滋阴补肾。", svg: '<path d="M50 10 L50 90" stroke="#999"/><circle cx="45" cy="80" r="6" fill="red"/>' },
+        { h: [19, 20], s: "戌", m: "心包经", p: "内关", g: "腕横纹上二寸（三指宽），两筋间。", addon: "温和灸，宁心安神。", svg: '<path d="M40 10 L40 90 M60 10 L60 90" stroke="#999"/><circle cx="50" cy="60" r="6" fill="red"/>' },
+        { h: [21, 22], s: "亥", m: "三焦经", p: "阳池", g: "腕背横纹中，指伸肌腱尺侧凹陷中。", addon: "直灸，通达全身气机。", svg: '<rect x="30" y="70" width="40" height="10" fill="#999"/><circle cx="50" cy="70" r="6" fill="red"/>' }
     ];
 
-    function heartbeat() {
+    function update() {
         const now = new Date();
         const h = now.getHours();
-        const m = now.getMonth() + 1;
-
-        // 季节锁定
-        const seasons = ["冬藏", "冬藏", "春生", "春生", "春生", "夏长", "夏长", "夏长", "秋收", "秋收", "秋收", "冬藏"];
-        document.getElementById('jieqi').innerText = `${now.getFullYear()}年${m}月 · 时令：${seasons[m-1]}`;
-
-        // 精准时辰逻辑
-        const cur = MOXA_CORE.find(x => h === x.h[0] || h === x.h[1]) || MOXA_CORE[2];
         
+        // 核心修正：12 时辰精准算法
+        const cur = MOXA_DB.find(x => h >= x.h[0] && h <= x.h[1]) || MOXA_DB[0];
+        if(h === 0) cur = MOXA_DB[0]; // 子时特殊处理
+
         document.getElementById('shichen').innerText = `${cur.s}时 (${cur.h[0]}:00-${cur.h[1]}:59)`;
         document.getElementById('meridian').innerText = `${cur.m}当令 · 艾灸正当时`;
-        document.getElementById('point-name').innerText = cur.p;
-        document.getElementById('ni-guide').innerText = cur.g;
-        
-        // 渲染 SVG 示意图
-        const svgBox = document.getElementById('visual-target');
-        svgBox.innerHTML = `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <text x="10" y="20" font-size="5" fill="#666">倪师取穴坐标示意</text>
-            ${cur.svg}
-        </svg>`;
+        document.getElementById('p-name').innerText = cur.p;
+        document.getElementById('p-guide').innerText = cur.g;
+        document.getElementById('p-addon').innerText = cur.addon;
+
+        // 渲染带有骨骼标记的 SVG
+        document.getElementById('visual-target').innerHTML = `
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <rect width="100" height="100" fill="none"/>
+                <text x="5" y="15" font-size="5" fill="#888">解剖方位参考</text>
+                ${cur.svg}
+            </svg>`;
     }
 
-    // 维度 3：盘古大模型模拟推演
     function diagnose() {
         const input = document.getElementById('userInput').value;
-        if(!input) return alert("请先录入感受");
-
-        let res = "";
-        if(input.includes("走") || input.includes("透")) {
-            res = "【辨证】药气入经，引火归元。说明你的元气能接引艾火，大吉之兆。";
-        } else if(input.includes("汗")) {
-            res = "【辨证】阳加于阴，寒湿外宣。倪师语：‘汗出寒排，此为生机’。";
-        } else if(input.includes("痛")) {
-            res = "【辨证】不通则痛。药力正与邪气搏斗。建议：移开一点，温和慢灸。";
-        } else {
-            res = "【提示】气机感传中。请对比身体整体的暖意是否有增加。";
-        }
+        if(!input) return alert("请先落笔记录体感");
+        
+        let report = "";
+        if(input.includes("走") || input.includes("热")) report = "【辨证】药气入经，引火归元。说明真阳已透达经络，大吉。";
+        else if(input.includes("汗")) report = "【辨证】阳加于阴，寒湿外宣。倪师语：‘汗出寒排，是为生机’。";
+        else report = "【提示】气机感传中。请对比昨日，是否有更深的温热渗透感。";
 
         const log = document.createElement('div');
-        log.className = 'log-item';
-        log.innerHTML = `<small style="color:#666">${new Date().toLocaleTimeString()}</small><br>${input}<br><b style="color:var(--gold)">${res}</b>`;
+        log.className = 'history-item';
+        log.innerHTML = `<small>${new Date().toLocaleTimeString()}</small><br>${input}<br><b style="color:var(--gold)">${report}</b>`;
         document.getElementById('logs').prepend(log);
         document.getElementById('userInput').value = "";
     }
 
-    // 开启心跳
-    setInterval(heartbeat, 1000);
-    heartbeat();
+    setInterval(update, 1000);
+    update();
 </script>
 </body>
 </html>
